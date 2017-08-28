@@ -1,1 +1,1 @@
-dynamicclamp.com
+https://dynamicclamp.com
