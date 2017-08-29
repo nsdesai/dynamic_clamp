@@ -1,1 +1,0 @@
-https://dynamicclamp.com
