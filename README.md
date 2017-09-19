@@ -2,7 +2,7 @@
 A fast, microcontroller-based dynamic clamp system
 
 The system (its function, its properties, and its place in contemporary neuroscience) is described in detail 
-in this paper: Niraj S. Desai, Richard Gray, and Daniel Johnston. A dynamic clamp on every rig. eNeuro (in press, 2017).
+in this paper: Niraj S. Desai, Richard Gray, and Daniel Johnston. A dynamic clamp on every rig. eNeuro (DOI:10.1523/ENEURO.0250-17.2017).
 
 The website www.dynamicclamp.com includes detailed instructions on how to assemble and use the system.
 
