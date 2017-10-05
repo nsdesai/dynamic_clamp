@@ -31,7 +31,7 @@
 //            and inactivation numbers for a range of membrane potentials and stores them in the lookup table variables,
 //            and the function called at every time step to calculate the sodium current to be injected. 
 //
-// Last revised 07/19/17, 2:27 pm
+// ADDED POTASSIUM M CONDUCTANCE
 
 
 #include <math.h>
@@ -53,7 +53,7 @@ const float outputSlope = 504.6777/outputScaling;
 const float outputIntercept = 2457.016; 
 
 // Conductance parameters are sent by the host computer over the USB port
-const int nPars = 8;              // number of adjustable parameters
+const int nPars = 9;              // number of adjustable parameters
 float gShunt = 0.0;               // nS, shunting conductance
 float gH = 0.0;                   // nS, maximal H (HCN) conductance
 float gNa = 0.0;                  // nS, maximal fast, transient sodium conductance
@@ -62,6 +62,7 @@ float OU1_D = 0.0;                // nS^2/msec, excitatory OU diffusion constant
 float OU2_mean = 0.0;             // nS, inhibitory OU mean conductance
 float OU2_D = 0.0;                // nS^2/msec, inhibitory OU diffusion constant
 float gEPSC = 0.0;                // nS, maximal conductance of EPSCs
+float gM = 0.0;                   // nS, maximal M conductance
 
 // Common global variables
 float dt = 0.01;                  // msec, the time step -- on a Teensy/Arduino dt will be variable
@@ -85,6 +86,7 @@ void setup() {
   }
   GenerateGaussianNumbers();                    // generate a pool of Gaussian numbers for use by the OU processes  
   GenerateSodiumLUT();                          // generate sodium activation/inactivation lookup table
+  GenerateMLUT();                               // generate M activation lookup table
   GenerateHcnLUT();                             // generate HCN activation lookup table
   pinMode(epscTriggerPin,INPUT);                // define the pin that receives a trigger when an EPSC should be injected
 }
@@ -97,11 +99,11 @@ void loop() {
   // Part 1:    Serial Communication & Parameter Setting
   // The host computer tells the Teensy when the dynamic clamp parameters should change.
   // To do this, it sends 4-byte-long numbers, one for each parameter. So if there are 
-  // 8 adjustable parameters, it will send 32 bytes. At present, the adjustable parameters
+  // 9 adjustable parameters, it will send 36 bytes. At present, the adjustable parameters
   // are the shunt conductance (nS), maximal HCN conductance (nS), maximal Na conductance (nS),
   // excitatory OU conductance (OU1) mean (nS), excitatory OU conductance diffusion constant (nS^2/ms),
   // inhibitory OU conductance (OU2) mean (nS), inhibitory OU conductance (OU2) diffusion
-  // constant (nS^2/ms), and maximal EPSC conductance (nS).
+  // constant (nS^2/ms), a maximal EPSC conductance (nS), and maximal M conductance (nS).
   union {
     byte asByte[4];
     float asFloat;
@@ -121,10 +123,10 @@ void loop() {
       OU2_mean = dataTemp[5];
       OU2_D = dataTemp[6];
       gEPSC = dataTemp[7];
+      gM = dataTemp[8];
       parNo = 0;
     }
   }
-
 
 
   // Part 2:    Read membrane potential & calculate dynamic clamp currents 
@@ -151,6 +153,9 @@ void loop() {
       epscTime = 0;
     }
     injectionCurrent += EPSC(v);
+  }
+  if (gM>0) {
+    injectionCurrent += M(v);
   }
 
  
