@@ -31,7 +31,7 @@
 //            and inactivation numbers for a range of membrane potentials and stores them in the lookup table variables,
 //            and the function called at every time step to calculate the sodium current to be injected. 
 //
-// Last revised 08/25/17, 6:15 pm
+// Last revised 10/31/17, 8:15 pm
 
 
 #include <math.h>
@@ -49,8 +49,8 @@ const float outputScaling = 400.0;               // number of picoamps injected 
 // they are independent of the amplifier and DAQ board
 const float inputSlope = 5.5010/inputScaling;      
 const float inputIntercept = -10922.73/inputScaling;    
-const float outputSlope = 502.004/outputScaling;       
-const float outputIntercept = 2385.989; 
+const float outputSlope = 753/outputScaling;       
+const float outputIntercept = 2386;
 
 // Conductance parameters are sent by the host computer over the USB port
 const int nPars = 8;              // number of adjustable parameters
