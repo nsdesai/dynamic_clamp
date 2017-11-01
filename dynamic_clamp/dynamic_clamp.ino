@@ -37,20 +37,20 @@
 #include <math.h>
 
 // Scaling for the patch clamp amplifier
-float inputScaling = 50.0;                 // number of millivolts sent out by amplifier for each millivolt of membrane potential
-                                           // e.g., with a scaling of 50, if the membrane potential is -65 mV, the amplifier outputs -3.25 V
-float outputScaling = 400.0;               // number of picoamps injected for every volt at the amplifier's command input
-                                           // e.g., if the DAC or the Teensy outputs -0.5 V, this is interpreted as -200 pA by the amplifier
-                                           // when the scaling is 400
+const float inputScaling = 50.0;                 // number of millivolts sent out by amplifier for each millivolt of membrane potential
+                                                 // e.g., with a scaling of 50, if the membrane potential is -65 mV, the amplifier outputs -3.25 V
+const float outputScaling = 400.0;               // number of picoamps injected for every volt at the amplifier's command input
+                                                 // e.g., if the DAC or the Teensy outputs -0.5 V, this is interpreted as -200 pA by the amplifier
+                                                 // when the scaling is 400
 
 
 // Calibrating the input/output numbers given the resistor values and power supply values of the breadboard
 // N.B.: these parameters (numerators) are properties of the components on the breadboard;
 // they are independent of the amplifier and DAQ board
 const float inputSlope = 5.5010/inputScaling;      
-const float inputIntercept = -10920.27/inputScaling;    
-const float outputSlope = 504.6777/outputScaling;       
-const float outputIntercept = 2457.016; 
+const float inputIntercept = -10922.73/inputScaling;    
+const float outputSlope = 502.004/outputScaling;       
+const float outputIntercept = 2385.989; 
 
 // Conductance parameters are sent by the host computer over the USB port
 const int nPars = 8;              // number of adjustable parameters
