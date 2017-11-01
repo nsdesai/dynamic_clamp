@@ -49,8 +49,8 @@ const float outputScaling = 400.0;               // number of picoamps injected 
 // they are independent of the amplifier and DAQ board
 const float inputSlope = 5.5010/inputScaling;      
 const float inputIntercept = -10922.73/inputScaling;    
-const float outputSlope = 502.004/outputScaling;       
-const float outputIntercept = 2385.989; 
+const float outputSlope = 753/outputScaling;       
+const float outputIntercept = 2386; 
 
 // Conductance parameters are sent by the host computer over the USB port
 const int nPars = 9;              // number of adjustable parameters
