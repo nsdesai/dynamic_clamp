@@ -9,7 +9,14 @@ The website www.dynamicclamp.com includes detailed instructions on how to assemb
 This site (github.com) houses the associated software (Arduino, Processing, Matlab). 
 
 Please direct any questions or comments to Niraj S. Desai at desai@utexas.edu.
+ 
 
-Copyright 2017. All files are copyrighted by Niraj S. Desai, Richard Gray, and Daniel Johnston, but we 
-assign them to the GNU General Public License (version 3, 29 June 2007). Everything can be used, distributed,
-or modified freely, subject to that license’s conditions.  
+
+******************************************************************************************************************************************
+Copyright 2017. Niraj S. Desai, Richard Gray, and Daniel Johnston.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
