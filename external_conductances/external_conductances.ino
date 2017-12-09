@@ -51,7 +51,7 @@ const float outputIntercept = 2386;
 const int sampleFrequency = 100000;   // Hz (choose one: 10000, 20000, 25000, 40000, 50000, or 100000)
 const bool  channelsInUse[3] = {true,true,false};   // the default, [true,true,false], means two conductance trains (e.g., excitation and inhibition) 
 const float reversalPotentials[3] = {0.0,-80.0, 0.0};   // reversal potentials for channels (e.g., 0 mV for excitation, -80 mV for inhibition)
-const float scalingFactors[3] = {1.0, 1.0, 1.0};    // scaling factors (nS/V)
+const float scalingFactors[3] = {10.0, 10.0, 1.0};    // scaling factors (nS/V)
 
 
 
