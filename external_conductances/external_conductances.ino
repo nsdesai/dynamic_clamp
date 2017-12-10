@@ -185,7 +185,7 @@ void loop() {
     float current = 0.0;
     for(size_t i = 0; i < 100; i++) {
         t0 = 0;
-        auto inputs = buffer[i].v;
+        auto inputs = buffer[i].v * 3.3/4095;
         float vm = inputSlope*float(inputs[0]) + inputIntercept; // membrane potential in mV
         for (int ii=1; ii<4; ii++) {
           if (channelsInUse[ii-1]) {
