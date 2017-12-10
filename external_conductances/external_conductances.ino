@@ -17,7 +17,7 @@
 //     a given indicates how a voltage (0-3.3 V) received at an analog input should be converted into a conductance (in nS).  
 //
 // This sketch makes use of Pedro Villaneuva's ADC library for the Teensy (https://github.com/pedvide/ADC) and a sketch for 
-// sampling four ADC channels more-or-less simultaneously contributed by PJRC.com forum senior member "tni" (whose real name
+// sampling four ADC channels simultaneously contributed by PJRC.com forum senior member "tni" (whose real name
 // I do not know). The latter sketch can be found at
 // https://forum.pjrc.com/threads/45206-Pedvide-s-ADC-library-multiple-channel-simultaneous-amp-continuous-acquisition?p=147644&viewfull=1#post147644
 // And, of course, no part of this project would be possible without Paul Stoffregen's introduction of and work on the Teensy.
