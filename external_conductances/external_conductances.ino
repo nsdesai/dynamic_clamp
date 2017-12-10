@@ -185,11 +185,11 @@ void loop() {
     float current = 0.0;
     for(size_t i = 0; i < 100; i++) {
         t0 = 0;
-        auto inputs = buffer[i].v * 3.3/4095;
+        auto inputs = buffer[i].v;
         float vm = inputSlope*float(inputs[0]) + inputIntercept; // membrane potential in mV
         for (int ii=1; ii<4; ii++) {
           if (channelsInUse[ii-1]) {
-            current += -scalingFactors[ii-1] * float(inputs[ii]) * (vm - reversalPotentials[ii-1]); // current in pA
+            current += -scalingFactors[ii-1] * float(inputs[ii]) * (3.3/4095) * (vm - reversalPotentials[ii-1]); // current in pA
           }
         }
         current = outputSlope*current + outputIntercept; // current in DAC units (0-4096) rather than pA
