@@ -68,7 +68,7 @@ const uint8_t adc1_pin1 = A13;    // ADC1
 const int dac_pin0 = A21;         // DAC0
 
 
-float prefactors[3] = {1,1,1};   // will be used in loop() to scale currents correctly
+float prefactors[3];   // will be used in loop() to scale currents correctly
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
