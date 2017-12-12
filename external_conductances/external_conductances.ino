@@ -3,7 +3,7 @@
 // This sketch monitors four of the Teensy microcontroller's analog inputs. One of these reads the membrane potential (Vm); the other
 // three can be used to read conductance signals sent out by the DAQ board (or by some other source). The Teensy will multiply
 // each conductance by its associated driving force (difference between Vm and the conductance's reversal potential, Erev) to
-// get the current through that conductance. It will then sum all the currents and send the sum through the DAC.
+// get the current through that conductance. It will then sum all the currents and send the sum through the DAC output.
 // 
 // The typical use case would be feeding excitatory and inhibitory conductance trains into a neuron to simulate "in vivo-like"
 // conditions. The trains may, for example, have been derived from voltage clamp recordings or from a network simulation.
@@ -12,7 +12,7 @@
 // (A) The input/output gains, slopes, and intercepts should be the same as for the original dynamic clamp sketch. The gains
 //     are set by the patch clamp amplifier. The slopes and intercepts should be set using the protocol described in www.dynamicclamp.com
 //     (see "Calibration"). 
-// (B) sampleFrequency should be set to 10000, 20000, 25000, 40000, 50000, or 100000.
+// (B) sampleFrequency should be set to 10000, 20000, 25000, 40000, 50000, or 100000 Hz.
 // (C) channelsInUse should be indicated, as should the associated reversal potentials and the scaling factors. The scaling factor (nS/V) for
 //     a given indicates how a voltage (0-3.3 V) received at an analog input should be converted into a conductance (in nS).  
 //
