@@ -10,7 +10,7 @@ m_OU_inh = 4.071;
 D_OU_inh = 2.01;
 g_EPSC = 1.2234; 
 
-% Put them together in one variable to send out the USB port. Convert the
+% Put them together in one variable to send out through the USB port. Convert the
 % numbers to single-point (32-bit) precision. (Matlab's default precision 
 % is double = 64 bit.) Convert the single point numbers to byte arrays.
 out = [g_shunt; g_HCN; g_Na; m_OU_exc; D_OU_exc; m_OU_inh; D_OU_inh; g_EPSC];
