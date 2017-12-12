@@ -13,8 +13,9 @@
 //     are set by the patch clamp amplifier. The slopes and intercepts should be set using the protocol described in www.dynamicclamp.com
 //     (see "Calibration"). 
 // (B) sampleFrequency should be set to 10000, 20000, 25000, 40000, 50000, or 100000 Hz.
-// (C) channelsInUse should be indicated, as should the associated reversal potentials and the scaling factors. The scaling factor (nS/V) for
-//     a given indicates how a voltage (0-3.3 V) received at an analog input should be converted into a conductance (in nS).  
+// (C) channelsInUse should be set, as should the associated reversal potentials and the scaling factors. The scaling factor (nS/V) for
+//     a given analog input indicates how a voltage (0-3.3 V) received at that input should be converted into a
+//     conductance (in nS).  
 //
 // This sketch makes use of Pedro Villaneuva's ADC library for the Teensy (https://github.com/pedvide/ADC) and a sketch for 
 // sampling four ADC channels simultaneously contributed by PJRC.com forum senior member "tni" (whose real name
@@ -22,7 +23,7 @@
 // https://forum.pjrc.com/threads/45206-Pedvide-s-ADC-library-multiple-channel-simultaneous-amp-continuous-acquisition?p=147644&viewfull=1#post147644
 // And, of course, no part of this project would be possible without Paul Stoffregen's introduction of and work on the Teensy.
 //
-// Last updated December 8, 2017 (NSD)
+// Last updated December 11, 2017 (NSD)
 
 
 #include <ADC.h>
