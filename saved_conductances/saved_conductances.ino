@@ -48,7 +48,7 @@ const int freq = 20000;                 // Hz, update rate. If you increase the 
                                         // is being used: a duration of 1 second at 20 kHz uses 32% of RAM; increasing the rate to
                                         // 50 kHz should probably be accompanied by a decrease in duration.
 const int duration = 1000;              // msec, total duration of train
-const int averagingNum = 16; 
+const int averagingNum = 16;            // number of averages the ADC takes before reporting a result
 int dt = int(1E6 / freq);               // usec, time step
 
 
