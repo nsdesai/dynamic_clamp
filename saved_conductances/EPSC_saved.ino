@@ -17,7 +17,7 @@ void CreateEpscTrain() {
     nStart = yy*nInterval;
     for (int zz=0; zz<N; zz++) {
       if (zz>=nStart) {
-        epscConductances[zz] +=  gEPSC*expf(-(zz-nStart)/nDecay)-expf(-(zz-nStart)/nRise);
+        epscConductances[zz] +=  gEPSC*(expf(-(zz-nStart)/nDecay)-expf(-(zz-nStart)/nRise));
       }
     }
   }
