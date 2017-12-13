@@ -42,12 +42,13 @@ const float outputIntercept = 2386;
 
 
 // Common global variables
-const int freq = 20000;                 // Hz, update rate. If you increase the update rate, you should decrease the number of averages -- this is set
-                                        // by the variable averagingNum in the function setup(). For example, an update rate of 50 kHz probably limits
-                                        // the number of averages to 8. Also keep track of how much memory is being used: a duration of 1 second at
-                                        // 20 kHz uses 32% of RAM; increasing the rate to 50 kHz should probably be accompanied by a decrease in
-                                        // duration.
+const int freq = 20000;                 // Hz, update rate. If you increase the update rate, you should decrease the number of 
+                                        // averages -- this is set by the variable averagingNum below. For example, an update rate 
+                                        // of 50 kHz probably limits the number of averages to 8. Also keep track of how much memory
+                                        // is being used: a duration of 1 second at 20 kHz uses 32% of RAM; increasing the rate to
+                                        // 50 kHz should probably be accompanied by a decrease in duration.
 const int duration = 1000;              // msec, total duration of train
+const int averagingNum = 16; 
 int dt = int(1E6 / freq);               // usec, time step
 
 
@@ -63,7 +64,6 @@ void setup() {
   Serial.begin(115200);
   analogWriteResolution(12);
   analogReadResolution(12);
-  int averagingNum = 16;
   CreateEpscTrain();                            // creates the EPSC train that will be read out every time a trigger is received
   analogReadAveraging(averagingNum);
   while (Serial.available() > 0) {              // make sure serial buffer is clear
