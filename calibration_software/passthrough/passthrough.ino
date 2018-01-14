@@ -26,5 +26,6 @@ void loop() {
   }
   int outputSignal = inputVal/nAverage;
   analogWrite(analogOutPin,outputSignal);
+  Serial.println(outputSignal);
   delay(100);
 }
