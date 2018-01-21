@@ -1,7 +1,7 @@
 // Teensy sketch that reads an analog input and immediately sends it out an analog output.
 // This can be used to calibrate the input part of the dynamic clamp system.
 //
-// Last modified 06/15/17.
+// Last modified 01/20/18.
 
 // hardware connections
 const int analogInPin = 0;        // ADC pin used to read membrane potential
