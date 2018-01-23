@@ -8,7 +8,7 @@ const int analogInPin = 0;        // ADC pin used to read membrane potential
 const int analogOutPin = A21;     // DAC pin used to output current
 
 // number of readings to average
-const int nAverage = 1;
+const int nAverage = 10;
 
 void setup() {
   Serial.begin(115200);
