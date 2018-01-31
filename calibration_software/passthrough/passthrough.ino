@@ -17,5 +17,5 @@ void setup() {
 }
 
 void loop() {
-  analogWrite(analogOutPin,analogRead(analogInPin);
+  analogWrite(analogOutPin,analogRead(analogInPin));
 }
