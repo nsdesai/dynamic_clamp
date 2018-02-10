@@ -5,7 +5,7 @@
 // variables for current injections
 const int nOutputs = 13;
 int outputs[nOutputs];
-float inputs[nOutputs];
+int inputs[nOutputs];
 
 // hardware connections
 const int analogInPin = 0;            // ADC pin used to read membrane potential
