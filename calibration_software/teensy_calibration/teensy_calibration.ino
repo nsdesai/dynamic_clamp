@@ -37,10 +37,12 @@ void loop() {
     }
     if (cmd==2) {                           // cmd=2, inject analog output and measure analog input
       outputs[0] = 200;
+      for (int z=1; z<nOutputs; z++) {
+        outputs[z] = outputs[z-1] + 300;
+      }
       for (int x=0; x<nOutputs; x++) {
         analogWrite(analogOutPin,outputs[x]);
         delay(settlingTime);
-        outputs[x+1] = outputs[x] + 300;
         inputs[x] = analogRead(analogInPin);
       }
       for (int y=0; y<nOutputs; y++) {
