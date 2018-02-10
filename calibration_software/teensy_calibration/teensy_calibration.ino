@@ -4,7 +4,7 @@
 
 // variables for current injections
 const int nOutputs = 13;
-float outputs[nOutputs];
+int outputs[nOutputs];
 float inputs[nOutputs];
 
 // hardware connections
@@ -26,7 +26,7 @@ void setup() {
     char foo = Serial.read();
   }
   analogWrite(analogOutPin,2048);
-  for (int z=0; z<nOutputs; z++) {
+  for (int z=0; z<nOutputs; z++) {    // DAC outputs between 300 and 3900 in increments of 300
     outputs[z] = 300*(z+1);
   }
 }
