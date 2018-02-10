@@ -26,6 +26,9 @@ void setup() {
     char foo = Serial.read();
   }
   analogWrite(analogOutPin,2048);
+  for (int z=0; z<nOutputs; z++) {
+    outputs[z] = 300*(z+1);
+  }
 }
 
 
@@ -36,10 +39,6 @@ void loop() {
       Serial.println(analogRead(analogInPin));
     }
     if (cmd==2) {                           // cmd=2, inject analog output and measure analog input
-      outputs[0] = 200;
-      for (int z=1; z<nOutputs; z++) {
-        outputs[z] = outputs[z-1] + 300;
-      }
       for (int x=0; x<nOutputs; x++) {
         analogWrite(analogOutPin,outputs[x]);
         delay(settlingTime);
