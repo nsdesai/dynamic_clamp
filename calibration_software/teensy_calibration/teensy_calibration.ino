@@ -14,7 +14,7 @@ const int analogOutPin = A21;         // DAC pin used to output current
 // global variables
 int cmd;
 float t0 = millis();
-int settlingTime = 500;               // msec, time to wait for voltage to reach a steady state 
+const int settlingTime = 500;         // msec, time to wait for voltage to reach a steady state 
                                       // (i.e., for the model cell capacitors to charge/discharge)
 
 
