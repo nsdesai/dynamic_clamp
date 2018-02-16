@@ -15,5 +15,7 @@ void loop() {
     outputNumber = Serial.parseInt();
     outputNumber = constrain(outputNumber,0,4095);
     analogWrite(analogOutPin,outputNumber);
+    delay(50);
+    Serial.println(outputNumber);
   }
 }
