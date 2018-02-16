@@ -1,7 +1,7 @@
 // Teensy sketch that reads an analog input and immediately sends it out an analog output.
 // This can be used to calibrate the input part of the dynamic clamp system.
 //
-// Last modified 01/23/18.
+// Last modified 02/16/18.
 
 // hardware connections
 const int analogInPin = 0;        // ADC pin used to read membrane potential
@@ -17,5 +17,16 @@ void setup() {
 }
 
 void loop() {
-  analogWrite(analogOutPin,analogRead(analogInPin));
+  float avg = 0;  // mean value of inputVal
+  float m = 10;   // maximum number of averages
+  float n = 0;    // current number of averages
+  while(n < m){
+    float inputVal = analogRead(analogInPin);
+    delay(100);   // wait for new, digitized samples
+    avg = (n/(n+1)) * avg + (1/(n+1)) * inputVal;
+    n++;
+  }
+  analogWrite(analogOutPin,avg);
+  delay(50);
+  Serial.println(int(avg));
 }
