@@ -160,6 +160,9 @@ void zero(){
       amp_vals[x] = 0.0;
       micro_vals[x] = 0.0;
     }
+    GPointsArray myPoints1 = new GPointsArray(numVals);
+    plot1.setPoints(myPoints1);
+    plot1.defaultDraw();  
 }
 
 
