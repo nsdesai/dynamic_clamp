@@ -68,6 +68,10 @@ float dt = 0.01;                  // msec, the time step -- on a Teensy/Arduino 
 elapsedMicros t0;                 // microsec, t0 is used to calculate dt on every iteration
 elapsedMillis epscTime;           // msec, time since last EPSC was triggered
 
+// Timing parameters for serial port communication
+const int pollInterval = 100;     // msec, polling interval for serial port communication
+elapsedMillis p0 = 0;             // msec, time since last polling interval ended
+
 // Hardware connections
 const int analogInPin = 0;        // ADC pin used to read membrane potential
 const int analogOutPin = A21;     // DAC pin used to output current
@@ -102,27 +106,30 @@ void loop() {
   // excitatory OU conductance (OU1) mean (nS), excitatory OU conductance diffusion constant (nS^2/ms),
   // inhibitory OU conductance (OU2) mean (nS), inhibitory OU conductance (OU2) diffusion
   // constant (nS^2/ms), and maximal EPSC conductance (nS).
-  union {
-    byte asByte[4];
-    float asFloat;
-  } data1;
-  static float dataTemp[nPars] = {0.0};
-  static byte parNo = 0;
-  if (Serial.available()>3) {
-    for (int x=0; x<4; x++) data1.asByte[x] = Serial.read();
-    dataTemp[parNo] = data1.asFloat;
-    parNo++;
-    if (parNo==nPars) {
-      gShunt = dataTemp[0];
-      gH = dataTemp[1];
-      gNa = dataTemp[2];
-      OU1_mean = dataTemp[3];
-      OU1_D = dataTemp[4];
-      OU2_mean = dataTemp[5];
-      OU2_D = dataTemp[6];
-      gEPSC = dataTemp[7];
-      parNo = 0;
+  if (p0 > pollInterval) {                                            // check for conductance updates frequently
+    union {
+      byte asByte[4];
+      float asFloat;
+    } data1;
+    static float dataTemp[nPars] = {0.0};
+    static byte parNo = 0;
+    if (Serial.available()>3) {
+      for (int x=0; x<4; x++) data1.asByte[x] = Serial.read();
+      dataTemp[parNo] = data1.asFloat;
+      parNo++;
+      if (parNo==nPars) {
+        gShunt = dataTemp[0];
+        gH = dataTemp[1];
+        gNa = dataTemp[2];
+        OU1_mean = dataTemp[3];
+        OU1_D = dataTemp[4];
+        OU2_mean = dataTemp[5];
+        OU2_D = dataTemp[6];
+        gEPSC = dataTemp[7];
+        parNo = 0;
+      }
     }
+    p0 = 0;
   }
 
 
@@ -136,9 +143,9 @@ void loop() {
   if (gShunt>0) {
     injectionCurrent += Shunting(v);
   }
-  if (gH>0) {
-    injectionCurrent += HCN(v);
-  }
+  
+  injectionCurrent += HCN(v, gH);                                     // allows for the reset of a current after its initial run
+  
   if (gNa>0) {
     injectionCurrent += Sodium(v);
   }  
@@ -146,7 +153,7 @@ void loop() {
     injectionCurrent += OrnsteinUhlenbeck(v);
   }
   if (gEPSC>0) {
-    if ((digitalReadFast(epscTriggerPin)==HIGH)&&(epscTime>2)) {        // poll epscTriggerPin to see if a trigger has arrived
+    if ((digitalReadFast(epscTriggerPin)==HIGH)&&(epscTime>2)) {      // poll epscTriggerPin to see if a trigger has arrived
       UpdateEpscTrain();
       epscTime = 0;
     }
