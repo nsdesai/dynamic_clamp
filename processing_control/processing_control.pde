@@ -65,7 +65,7 @@ void setup() {
     dcControl.addBang("zero").setPosition(250,500).setSize(60,50).setColorForeground(color(100,100,100));
     
     // create the serial port used to communicate with the microcontroller
-    myPort = new Serial(this,"COM13",115200);
+    myPort = new Serial(this,"COM3",115200);
     myPort.clear();
     
 }
