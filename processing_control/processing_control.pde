@@ -14,7 +14,7 @@
 //
 // The sketch requires the ControlP5 library.
 //
-// Last updated 04/20/17 at 10:37 pm.
+// Last updated 05/20/2018, 7:00 pm - ND, CR
 
 
 // import libraries
