@@ -31,7 +31,7 @@
 //            and inactivation numbers for a range of membrane potentials and stores them in the lookup table variables,
 //            and the function called at every time step to calculate the sodium current to be injected. 
 //
-// Last revised 11/18/17, 6:05 pm
+// Last revised 05/20/2018, 7:00 pm - ND, CR
 
 
 #include <math.h>
@@ -127,6 +127,8 @@ void loop() {
         OU2_D = dataTemp[6];
         gEPSC = dataTemp[7];
         parNo = 0;
+        for (int n=0; n<nPars; n++) Serial.println(dataTemp[n]);      // (prepare) data echo to sender
+        Serial.send_now();                                            // schedule immediate transmission
       }
     }
     p0 = 0;
