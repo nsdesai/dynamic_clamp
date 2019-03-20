@@ -50,7 +50,7 @@ const float gain_OUTPUT = 400.0;                  // number of picoamps injected
 const float inputSlope = 5.5010/gain_INPUT;      
 const float inputIntercept = -10922.73/gain_INPUT;    
 const float outputSlope = 753/gain_OUTPUT;       
-const float outputIntercept = 2386/gain_OUTPUT;
+const float outputIntercept = 2386;
 
 // Conductance parameters are sent by the host computer over the USB port
 const int nPars = 8;              // number of adjustable parameters
