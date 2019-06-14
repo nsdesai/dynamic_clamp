@@ -8,7 +8,7 @@ The website www.dynamicclamp.com includes detailed instructions on how to assemb
 
 This site (github.com) houses the associated software (Arduino, Processing, Matlab). 
 
-Please direct any questions or comments to Niraj S. Desai at desai@utexas.edu.
+Please direct any questions or comments to Niraj S. Desai at niraj.desai3@nih.gov.
  
 
 
