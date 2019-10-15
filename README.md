@@ -1,12 +1,13 @@
 # dynamic_clamp
 A fast, microcontroller-based dynamic clamp system
 
-The system (its function, its properties, and its place in contemporary neuroscience) is described in detail 
-in this paper: Niraj S. Desai, Richard Gray, and Daniel Johnston. A dynamic clamp on every rig. eNeuro (DOI:10.1523/ENEURO.0250-17.2017).
+The system was introduced in this paper: Niraj S. Desai, Richard Gray, and Daniel Johnston. A dynamic clamp on every rig. eNeuro (DOI:10.1523/ENEURO.0250-17.2017).
 
-The website www.dynamicclamp.com includes detailed instructions on how to assemble and use the system.
+The website www.dynamicclamp.com includes detailed instructions on how to assemble and use the system, including recent updates.
 
-This site (github.com) houses the associated software (Arduino, Processing, Matlab). 
+This site (github.com) houses most of the associated software (Arduino, Processing, Matlab).
+
+Christian Rickert has written some alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account: https://github.com/christianrickert.
 
 Please direct any questions or comments to Niraj S. Desai at niraj.desai3@nih.gov.
  
