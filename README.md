@@ -7,14 +7,18 @@ The website www.dynamicclamp.com includes detailed instructions on how to assemb
 
 This site (github.com) houses most of the associated software (Arduino, Processing, Matlab).
 
-Christian Rickert has written some alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account https://github.com/christianrickert.
+Two alternative/complementary software projects you might consider:
 
-Please direct any questions or comments to Niraj S. Desai at niraj.desai3@nih.gov.
+(1) Christian Rickert has written alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account https://github.com/christianrickert.
+
+(2) Kyle Wedgwood has written a Matlab controller that would replace the Processing sketch included here. It allows more flexibility in specifying which conductances to control, and is available through his Github account https://github.com/kyle-wedgwood/DynamicClampController.
+
+Please direct any questions or comments about this Github site or the dynamic clamp project generally to Niraj S. Desai at niraj.desai3@nih.gov.
  
 
 
 ******************************************************************************************************************************************
-Copyright 2017. Niraj S. Desai, Richard Gray, and Daniel Johnston.
+Copyright 2019. Niraj S. Desai, Richard Gray, and Daniel Johnston.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
