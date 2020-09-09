@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name ad8031anz_pinCorrected)(type Legacy)(uri ${KIPRJMOD}/ad8031anz_pinCorrected.lib)(options "")(descr ""))
-)
