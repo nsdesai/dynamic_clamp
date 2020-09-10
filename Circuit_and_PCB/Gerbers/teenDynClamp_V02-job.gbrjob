@@ -7,7 +7,7 @@
       "Application": "Pcbnew",
       "Version":     "(5.1.6)-1"
     },
-    "CreationDate":  "2020-09-10T13:52:24+05:30"
+    "CreationDate":  "2020-09-10T16:08:27+05:30"
   },
   "GeneralSpecs":
   {
@@ -15,7 +15,7 @@
     {
       "Name": "teenDynClamp_V02",
       "GUID": "7465656e-4479-46e4-936c-616d705f5630",
-      "Revision": "v02"
+      "Revision": "v02.1"
     },
     "Size":
     {

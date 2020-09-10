@@ -964,7 +964,7 @@ Wire Wire Line
 Connection ~ 2450 3650
 Text Notes 2750 2500 0    100  ~ 20
 VDC
-Text Notes 1600 3500 2    100  ~ 20
+Text Notes 1750 3500 2    100  ~ 20
 VDAQ
 Text Notes 2500 1100 2    100  ~ 20
 VAMP
@@ -1020,10 +1020,6 @@ Wire Wire Line
 	4450 1000 4850 1000
 Wire Wire Line
 	800  3300 800  3650
-Wire Wire Line
-	800  2800 800  3300
-Wire Wire Line
-	800  3650 1950 3650
 Connection ~ 800  3650
 Wire Wire Line
 	800  3650 800  3800
@@ -1039,8 +1035,6 @@ Wire Wire Line
 Wire Wire Line
 	1600 3100 1600 3500
 Connection ~ 1600 3500
-Wire Wire Line
-	1600 3500 2100 3500
 $Comp
 L Device:R RTTL2
 U 1 1 5F5B88B3
@@ -1154,4 +1148,29 @@ F 3 "" H 2200 5200 60  0000 C CNN
 	1    2200 5200
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	1600 3500 2100 3500
+Wire Wire Line
+	800  3650 1950 3650
+$Comp
+L Device:R R_pulldown1
+U 1 1 5F5A4F55
+P 1200 3300
+F 0 "R_pulldown1" H 1270 3346 50  0000 L CNN
+F 1 "1MΩ" H 1000 3350 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 1130 3300 50  0001 C CNN
+F 3 "~" H 1200 3300 50  0001 C CNN
+	1    1200 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 3150 800  3150
+Wire Wire Line
+	800  2800 800  3150
+Connection ~ 800  3150
+Wire Wire Line
+	800  3150 800  3300
+Wire Wire Line
+	1200 3450 1200 3500
+Connection ~ 1200 3500
 $EndSCHEMATC
