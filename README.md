@@ -7,11 +7,13 @@ The website www.dynamicclamp.com includes detailed instructions on how to assemb
 
 This site (github.com) houses most of the associated software (Arduino, Processing, Matlab).
 
-Two alternative/complementary software projects you might consider:
+The original project was built on a breadboard and used Arduino/Processing software. Some alternatives you might consider:
 
-(1) Christian Rickert has written alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account https://github.com/christianrickert.
+(1) Aditya Asopa (https://github.com/AdityaAsopa) has designed a printed circuit board (PCB) version that can be used in place of a breadboard. It includes some nice additional features, including a toggle switch to bypass the dynamic clamp circuitry (useful if one wants to just in current clamp). The PCB design files can be downloaded from this page (Circuit_and_PCB folder). A description will soon be added to www.dynamicclamp.com. 
 
-(2) Kyle Wedgwood has written a Matlab controller that would replace the Processing sketch included here. It allows more flexibility in specifying which conductances to control, and is available through his Github account https://github.com/kyle-wedgwood/DynamicClampController.
+(2) Christian Rickert has written alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account https://github.com/christianrickert.
+
+(3) Kyle Wedgwood has written a Matlab controller that would replace the Processing sketch included here. It allows more flexibility in specifying which conductances to control, and is available through his Github account https://github.com/kyle-wedgwood/DynamicClampController.
 
 Please direct any questions or comments about this Github site or the dynamic clamp project generally to Niraj S. Desai at niraj.desai3@nih.gov.
  
