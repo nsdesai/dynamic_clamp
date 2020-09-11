@@ -9,7 +9,7 @@ This site (github.com) houses most of the associated software (Arduino, Processi
 
 The original project was built on a breadboard and used Arduino/Processing software. Some alternatives you might consider:
 
-(1) Aditya Asopa (https://github.com/AdityaAsopa) has designed a printed circuit board (PCB) version that can be used in place of a breadboard. It includes some nice additional features, including a toggle switch to bypass the dynamic clamp circuitry (useful if one wants to just in current clamp). The PCB design files can be downloaded from this page (Circuit_and_PCB folder). A description will soon be added to www.dynamicclamp.com. 
+(1) Aditya Asopa (https://github.com/AdityaAsopa) has designed a printed circuit board (PCB) version that can be used in place of the breadboard. It includes some nice additional features, including a toggle switch to bypass the dynamic clamp circuitry (useful if one wants to just in current clamp). The PCB design files can be downloaded from this page (Circuit_and_PCB folder). A description will soon be added to www.dynamicclamp.com. 
 
 (2) Christian Rickert has written alternative software (dyClamp and pyClamp) with extended functionality, including a Python-based control GUI. His software is described at https://dynamicclamp.com/python-alternative/ and is available through his Github account https://github.com/christianrickert.
 
