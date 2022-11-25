@@ -3,7 +3,7 @@ A fast, microcontroller-based dynamic clamp system
 
 The system was introduced in this paper: Niraj S. Desai, Richard Gray, and Daniel Johnston. A dynamic clamp on every rig. eNeuro (DOI:10.1523/ENEURO.0250-17.2017).
 
-The website www.dynamicclamp.com includes detailed instructions on how to assemble and use the system. It includes descriptions of recent updates.
+The website https://optogeneticsandneuralengineeringcore.gitlab.io/dynamicclampsite/ includes detailed instructions on how to assemble and use the system. It includes descriptions of recent updates.
 
 This site (github.com) houses most of the associated software (Arduino, Processing, Matlab).
 
