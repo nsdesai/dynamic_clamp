@@ -37,7 +37,7 @@
 #include <math.h>
 
 // Scaling for the patch clamp amplifier
-const float gain_INPUT = 50.0;                    // number of millivolts sent out by amplifier for each millivolt of membrane potential
+const float gain_INPUT = 100.0;                   // number of millivolts sent out by amplifier for each millivolt of membrane potential
                                                   // e.g., with a scaling of 50, if the membrane potential is -65 mV, the amplifier outputs -3.25 V
 const float gain_OUTPUT = 400.0;                  // number of picoamps injected for every volt at the amplifier's command input
                                                   // e.g., if the DAC or the Teensy outputs -0.5 V, this is interpreted as -200 pA by the amplifier
