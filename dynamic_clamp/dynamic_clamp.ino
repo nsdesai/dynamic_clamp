@@ -47,8 +47,8 @@ const float gain_OUTPUT = 400.0;                  // number of picoamps injected
 // Calibrating the input/output numbers given the resistor values and power supply values of the breadboard
 // n.b., these parameters (numerators) are properties of the components on the breadboard;
 // they are independent of the amplifier and DAQ board
-const float inputSlope = 5.5010/gain_INPUT;      
-const float inputIntercept = -10922.73/gain_INPUT;    
+const float inputSlope = 5.0375/gain_INPUT;      
+const float inputIntercept = -10312.50/gain_INPUT;    
 const float outputSlope = 753/gain_OUTPUT;       
 const float outputIntercept = 2386;
 
