@@ -1,4 +1,4 @@
-// teensy 3.6 sketch to implement dynamic clamp
+// Arduino sketch to implement dynamic clamp
 //
 // The sketch includes a main file (this one) and other files (which appear as tabs) that define the conductances.
 // The main file is organized like this:
@@ -31,10 +31,48 @@
 //            and inactivation numbers for a range of membrane potentials and stores them in the lookup table variables,
 //            and the function called at every time step to calculate the sodium current to be injected. 
 //
-// Last revised 05/20/2018, 7:00 pm - ND, CR
 
 
 #include <math.h>
+
+#if defined(TEENSYDUINO)
+    // => running on teensy 3.6
+    #define DIGITAL_READ(pin) digitalReadFast(pin)
+    #define SEND_NOW() Serial.send_now()
+    // ADC pin used to read membrane potential
+    #define PIN_ANALOG_IN 0
+    // DAC pin used to output current
+    #define PIN_ANALOG_OUT A21
+    // pin used to trigger EPSC train
+    #define PIN_EPSC_TRIGGER 2
+
+#elif defined(ADAFRUIT_ITSYBITSY_M4_EXPRESS)
+    // => running on adafruit itsybitsy m4
+    // `elapsedMillis` library is a required dependency
+    #include <elapsedMillis.h>
+    #define DIGITAL_READ(pin) digitalRead(pin)
+    #define SEND_NOW() Serial.flush()
+    // ADC pin used to read membrane potential
+    #define PIN_ANALOG_IN A3
+    // DAC pin used to output current
+    #define PIN_ANALOG_OUT DAC0
+    // pin used to trigger EPSC train
+    #define PIN_EPSC_TRIGGER 7
+
+#else
+    // => running on some other board
+    // `elapsedMillis` library is a required dependency
+    #include <elapsedMillis.h>
+    #define DIGITAL_READ(pin) digitalRead(pin)
+    #define SEND_NOW() Serial.flush()
+    // ADC pin used to read membrane potential
+    #define PIN_ANALOG_IN A1
+    // DAC pin used to output current
+    #define PIN_ANALOG_OUT DAC0
+    // pin used to trigger EPSC train
+    #define PIN_EPSC_TRIGGER 5
+#endif
+
 
 // Scaling for the patch clamp amplifier
 const float gain_INPUT = 100.0;                   // number of millivolts sent out by amplifier for each millivolt of membrane potential
@@ -47,9 +85,9 @@ const float gain_OUTPUT = 400.0;                  // number of picoamps injected
 // Calibrating the input/output numbers given the resistor values and power supply values of the breadboard
 // n.b., these parameters (numerators) are properties of the components on the breadboard;
 // they are independent of the amplifier and DAQ board
-const float inputSlope = 5.0375/gain_INPUT;      
-const float inputIntercept = -10312.50/gain_INPUT;    
-const float outputSlope = -583.3586/gain_OUTPUT;       
+const float inputSlope = 5.0375 / gain_INPUT;
+const float inputIntercept = -10312.50 / gain_INPUT;
+const float outputSlope = -583.3586 / gain_OUTPUT;
 const float outputIntercept = 1925.0834;
 
 // Conductance parameters are sent by the host computer over the USB port
@@ -72,102 +110,92 @@ elapsedMillis epscTime;           // msec, time since last EPSC was triggered
 const int pollInterval = 100;     // msec, polling interval for serial port communication
 elapsedMillis p0 = 0;             // msec, time since last polling interval ended
 
-// Hardware connections
-const int analogInPin = 0;        // ADC pin used to read membrane potential
-const int analogOutPin = A21;     // DAC pin used to output current
-const int epscTriggerPin = 2;     // pin used to trigger EPSC train 
 
-
-
-
-void setup() {      
+void setup() {
   Serial.begin(115200);
   analogWriteResolution(12);
   analogReadResolution(12);
-  while (Serial.available()>0) {                // make sure serial buffer is clear  
-    char foo = Serial.read();
+  while (Serial.available()>0) {                // make sure serial buffer is clear
+    Serial.read();
   }
-  GenerateGaussianNumbers();                    // generate a pool of Gaussian numbers for use by the OU processes  
+  GenerateGaussianNumbers();                    // generate a pool of Gaussian numbers for use by the OU processes
   GenerateSodiumLUT();                          // generate sodium activation/inactivation lookup table
   GenerateHcnLUT();                             // generate HCN activation lookup table
-  pinMode(epscTriggerPin,INPUT);                // define the pin that receives a trigger when an EPSC should be injected
+  pinMode(PIN_EPSC_TRIGGER, INPUT);             // define the pin that receives a trigger when an EPSC should be injected
 }
 
-
-
+// vars to decode params sent from GUI
+float dataTemp[nPars] = {0.00};
+int parNo = 0;
+float tempVal;
+char tempBytes[4];
 
 void loop() {
+    // Part 1:    Serial Communication & Parameter Setting
+    // The host computer tells the Teensy when the dynamic clamp parameters should change.
+    // To do this, it sends 4-byte-long numbers, one for each parameter. So if there are
+    // 8 adjustable parameters, it will send 32 bytes. At present, the adjustable parameters
+    // are the shunt conductance (nS), maximal HCN conductance (nS), maximal Na conductance (nS),
+    // excitatory OU conductance (OU1) mean (nS), excitatory OU conductance diffusion constant (nS^2/ms),
+    // inhibitory OU conductance (OU2) mean (nS), inhibitory OU conductance (OU2) diffusion
+    // constant (nS^2/ms), and maximal EPSC conductance (nS).
+    if (p0 > pollInterval) {
 
-  // Part 1:    Serial Communication & Parameter Setting
-  // The host computer tells the Teensy when the dynamic clamp parameters should change.
-  // To do this, it sends 4-byte-long numbers, one for each parameter. So if there are 
-  // 8 adjustable parameters, it will send 32 bytes. At present, the adjustable parameters
-  // are the shunt conductance (nS), maximal HCN conductance (nS), maximal Na conductance (nS),
-  // excitatory OU conductance (OU1) mean (nS), excitatory OU conductance diffusion constant (nS^2/ms),
-  // inhibitory OU conductance (OU2) mean (nS), inhibitory OU conductance (OU2) diffusion
-  // constant (nS^2/ms), and maximal EPSC conductance (nS).
-  if (p0 > pollInterval) {                                            // check for conductance updates frequently
-    union {
-      byte asByte[4];
-      float asFloat;
-    } data1;
-    static float dataTemp[nPars] = {0.0};
-    static byte parNo = 0;
-    if (Serial.available()>3) {
-      for (int x=0; x<4; x++) data1.asByte[x] = Serial.read();
-      dataTemp[parNo] = data1.asFloat;
-      parNo++;
-      if (parNo==nPars) {
-        gShunt = dataTemp[0];
-        gH = dataTemp[1];
-        gNa = dataTemp[2];
-        OU1_mean = dataTemp[3];
-        OU1_D = dataTemp[4];
-        OU2_mean = dataTemp[5];
-        OU2_D = dataTemp[6];
-        gEPSC = dataTemp[7];
-        parNo = 0;
-        for (int n=0; n<nPars; n++) Serial.println(dataTemp[n]);      // (prepare) data echo to sender
-        Serial.send_now();                                            // schedule immediate transmission
-      }
+        while (Serial.available()) {
+            Serial.readBytes(tempBytes, 4);
+            memcpy(&tempVal, &tempBytes, 4);
+            dataTemp[parNo] = tempVal;
+            parNo++;
+        }
+
+        if (parNo == nPars) {
+            gShunt = dataTemp[0];
+            gH = dataTemp[1];
+            gNa = dataTemp[2];
+            OU1_mean = dataTemp[3];
+            OU1_D = dataTemp[4];
+            OU2_mean = dataTemp[5];
+            OU2_D = dataTemp[6];
+            gEPSC = dataTemp[7];
+
+            for (int n = 0; n < nPars; n++) {
+                Serial.println(dataTemp[n], 6);
+                SEND_NOW();
+            }
+            parNo = 0;
+        }
+        p0 = 0;
     }
-    p0 = 0;
-  }
 
+    // Part 2:    Read membrane potential & calculate dynamic clamp currents
+    float v = inputSlope * analogRead(PIN_ANALOG_IN) + inputIntercept;    // mV, given amplifier settings
+    float injectionCurrent = 0.0;                                       // pA
+    dt = 0.001 * (float) t0;                                               // msec, time step
+    t0 = 0;                                                             // set elapsed time back to zero
 
-
-  // Part 2:    Read membrane potential & calculate dynamic clamp currents 
-  float v = inputSlope * analogRead(analogInPin) + inputIntercept;    // mV, given amplifier settings 
-  float injectionCurrent = 0.0;                                       // pA
-  dt = 0.001*(float)t0;                                               // msec, time step
-  t0 = 0;                                                             // set elapsed time back to zero
-  
-  if (gShunt>0) {
-    injectionCurrent += Shunting(v);
-  }
-  
-  injectionCurrent += HCN(v, gH);                                     // allows for the reset of a current after its initial run
-  
-  if (gNa>0) {
-    injectionCurrent += Sodium(v);
-  }  
-  if (OU1_mean>0 || OU2_mean>0) {
-    injectionCurrent += OrnsteinUhlenbeck(v);
-  }
-  if (gEPSC>0) {
-    if ((digitalReadFast(epscTriggerPin)==HIGH)&&(epscTime>2)) {      // poll epscTriggerPin to see if a trigger has arrived
-      UpdateEpscTrain();
-      epscTime = 0;
+    if (gShunt > 0) {
+        injectionCurrent += Shunting(v);
     }
-    injectionCurrent += EPSC(v);
-  }
 
- 
-  
-  // Part 3:      Send out the calculated dynamic clamp current
-  injectionCurrent = outputSlope * injectionCurrent + outputIntercept;  // pA converted into analog output integers
-  int outputSignal = constrain((int)injectionCurrent,0,4095);           // make sure the output is an integer between 0 and 4095 (12 bits)
-  analogWrite(analogOutPin,outputSignal);                               // send the output to the patch clamp or summing amplifier
+    injectionCurrent += HCN(v, gH);                                     // allows for the reset of a current after its initial run
 
+    if (gNa > 0) {
+        injectionCurrent += Sodium(v);
+    }
+    if (OU1_mean > 0 || OU2_mean > 0) {
+        injectionCurrent += OrnsteinUhlenbeck(v);
+    }
+    if (gEPSC > 0) {
+        if ((DIGITAL_READ(PIN_EPSC_TRIGGER) == HIGH) && (epscTime > 2)) {      // poll epscTriggerPin to see if a trigger has arrived
+            UpdateEpscTrain();
+            epscTime = 0;
+        }
+        injectionCurrent += EPSC(v);
+    }
+
+
+    // Part 3:      Send out the calculated dynamic clamp current
+    injectionCurrent = outputSlope * injectionCurrent + outputIntercept;  // pA converted into analog output integers
+    int outputSignal = constrain((int) injectionCurrent, 0, 4095);           // make sure the output is an integer between 0 and 4095 (12 bits)
+    analogWrite(PIN_ANALOG_OUT, outputSignal);                               // send the output to the patch clamp or summing amplifier
 }
-

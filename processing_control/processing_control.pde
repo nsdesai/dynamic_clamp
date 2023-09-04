@@ -1,34 +1,59 @@
 // This Processing sketch opens a GUI in which users can specify the
-// conductance parameters used by the Teensy microcontroller. There are eight of 
-// them at present: shunt conductance (g_shunt, nS), maximum HCN conductance (g_hcn, nS),
-// maximum sodium conductance (g_Na, nS), mean excitatory Ornstein-Uhlenbeck
-// conductance (m_OU_exc, nS), diffusion constant of excitatory Ornstein-Uhlenbeck
-// conductance (D_OU_exc, nS^2/ms), mean inhibitory Ornstein-Uhlenbeck conductance
-// (m_OU_inh, nS), diffusion constant of inhibitory Ornstein-Uhlenbeck conductance
-// (D_OU_inh, nS^2/ms), and maximum EPSC conductance (g_epsc, nS).
+// conductance parameters used by the Teensy microcontroller.
+//
+// There are eight of them at present:
+//     - shunt conductance (g_shunt, nS)
+//     - maximum HCN conductance (g_hcn, nS)
+//     - maximum sodium conductance (g_Na, nS)
+//     - mean excitatory Ornstein-Uhlenbeck conductance (m_OU_exc, nS)
+//     - diffusion constant of excitatory Ornstein-Uhlenbeck conductance (D_OU_exc, nS^2/ms)
+//     - mean inhibitory Ornstein-Uhlenbeck conductance (m_OU_inh, nS)
+//     - diffusion constant of inhibitory Ornstein-Uhlenbeck conductance (D_OU_inh, nS^2/ms)
+//     - maximum EPSC conductance (g_epsc, nS)
 //
 // The numbers can be adjusted using the sliders.
 //
+// Pressing "connect" will connect to the microcontroller via the serial port.
 // Pressing "upload" will send the numbers in the GUI to the microcontroller.
 // Pressing "zero" will set all the numbers to zero and send zeros to the microcontroller.
 //
 // The sketch requires the ControlP5 library.
 //
-// Last updated 05/20/2018, 7:00 pm - ND, CR
 
-
-// import libraries
 import controlP5.*;
-import processing.serial.*;
+import processing.serial.Serial;
 import java.text.*;
 import java.io.*;
 import java.nio.*;
 
-// define variables for the ControlP5 object (the GUI) and 
+// ---
 // a serial object (the port to communicate with the microcontroller)
-ControlP5 dcControl;
-Serial myPort;
-String[] echo = {};
+// change port if needed in the UI
+String DEFAULT_SERIAL_PORT = System.getProperty("os.name").startsWith("Windows")
+  ? " COM3"                    // usual windows default
+  : " /dev/cu.usbmodem101";    // usual posix default
+Serial mcuPort;
+
+// ---
+// define variables for the ControlP5 object (the GUI)
+ControlP5 cp5;
+
+color textColor = color(100, 100, 100);
+color inputColor = color(64, 64, 64);
+color disabledColor = color(200, 200, 200);
+color buttonColor = color(0, 45, 95);
+color okColor = color(64, 200, 64);
+color failColor = color(200, 64, 64);
+
+Button connectButton;
+Button uploadButton;
+Button zeroButton;
+Textfield connectTextfield;
+Textfield g_epsc_textfield;
+
+// ---
+// storage vars
+String[] echo = new String[8];
 
 // initialize the variables set by the GUI
 float g_shunt = 0;
@@ -38,158 +63,255 @@ float m_OU_exc = 0;
 float D_OU_exc = 0;
 float m_OU_inh = 0;
 float D_OU_inh = 0;
-Textfield g_epsc_textfield;
 
 
 void setup() {
-  
-    // specify GUI window size, color, and text case
-    size(450,600);
-    background(150);
-    Label.setUpperCaseDefault(false);
-    
-    // create the ControlP5 object, add sliders, specify the font, and add buttons
-    dcControl = new ControlP5(this);
-    dcControl.addSlider("g_shunt", 0, 10, 0, 100, 50, 200, 30);
-    dcControl.addSlider("g_hcn", 0, 10, 0, 100, 100, 200, 30);
-    dcControl.addSlider("g_Na", 0, 200, 0, 100, 150, 200, 30);
-    dcControl.addSlider("m_OU_exc", 0, 10, 0, 100, 200, 200, 30);
-    dcControl.addSlider("D_OU_exc", 0, 10, 0, 100, 250, 200, 30);
-    dcControl.addSlider("m_OU_inh", 0, 10, 0, 100, 300, 200, 30);
-    dcControl.addSlider("D_OU_inh", 0, 10, 0, 100, 350, 200, 30);
-    g_epsc_textfield = dcControl.addTextfield("g_epsc", 100, 400, 200, 30).setText(" 0.00").setColorBackground(color(64,64,64));
-    PFont pfont = createFont("Arial", 8, true);
-    ControlFont font = new ControlFont(pfont, 18);
-    dcControl.setFont(font);
-    dcControl.addBang("upload").setPosition(125,500).setSize(60,50).setColorForeground(color(100,100,100));
-    dcControl.addBang("zero").setPosition(250,500).setSize(60,50).setColorForeground(color(100,100,100));
-    
-    // create the serial port used to communicate with the microcontroller
-    myPort = new Serial(this,"COM3",115200);
-    myPort.clear();
-    
+  int offsetX = 100;
+  int offsetY = 50;
+
+  // specify GUI window size, color, and text case
+  size(450, 650);
+  Label.setUpperCaseDefault(false);
+
+  // create the ControlP5 object, add sliders, specify the font, and add buttons
+  cp5 = new ControlP5(this);
+
+  PFont pfont = createFont("Arial", 8, true);
+  ControlFont font = new ControlFont(pfont, 18);
+  cp5.setFont(font);
+
+  connectTextfield = cp5.addTextfield("Serial Port", offsetX, offsetY, 200, 30)
+    .setText(DEFAULT_SERIAL_PORT)
+    .setColorBackground(inputColor);
+  connectButton = cp5.addButton("Connect");
+  connectButton.setPosition(offsetX + 220, offsetY)
+    .setSize(80, 30)
+    .setColorBackground(buttonColor)
+    .setColorForeground(textColor);
+
+  offsetY+=75;
+  cp5.addSlider("g_shunt", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("g_hcn", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("g_Na", 0, 200, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("m_OU_exc", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("D_OU_exc", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("m_OU_inh", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  cp5.addSlider("D_OU_inh", 0, 10, 0, offsetX, offsetY, 200, 30)
+    .setColorBackground(inputColor);
+  offsetY+=50;
+  g_epsc_textfield = cp5.addTextfield("g_epsc", offsetX, offsetY, 200, 30)
+    .setText(" 0.00")
+    .setColorBackground(inputColor);
+
+  offsetY+=75;
+
+  uploadButton = cp5.addButton("Upload");
+  uploadButton.setPosition(offsetX+25, offsetY)
+    .setSize(80, 50)
+    .setColorBackground(disabledColor)
+    .setColorForeground(textColor)
+    .setLock(true);
+
+  zeroButton = cp5.addButton("Zero");
+  zeroButton.setPosition(offsetX+150, offsetY)
+    .setSize(80, 50)
+    .setColorBackground(disabledColor)
+    .setColorForeground(textColor)
+    .setLock(true);
 }
 
 
+void draw() {
+  // draw a background so fonts are antialiased
+  background(color(150, 150, 150));
+}
 
-void draw(){
-  // nothing to see here: the Processing language requires every sketch to contain a draw() function
+
+// connect to desired com port
+void connect() {
+  println("connecting...");
+
+  // create the serial port used to communicate with the microcontroller
+  try {
+    mcuPort = new Serial(this, connectTextfield.getText().trim(), 115200);
+  }
+  catch(Exception e) {
+    println("connect to serial port failed");
+    connectTextfield.setColorBackground(failColor);
+    uploadButton.setColorBackground(disabledColor).setLock(true);
+    zeroButton.setColorBackground(disabledColor).setLock(true);
+    return;
+  }
+  mcuPort.clear();
+
+  connectTextfield.setColorBackground(okColor);
+  uploadButton.setColorBackground(textColor).setLock(false);
+  zeroButton.setColorBackground(textColor).setLock(false);
+
+  println("connected!");
+}
+
+
+boolean isConnected() {
+  return mcuPort != null;
 }
 
 
 // Upload the numbers in the GUI to the microcontroller.
-void upload(){
-      print("Updating ...");
-      writetoteensy(g_shunt);
-      writetoteensy(g_hcn);
-      writetoteensy(g_Na);
-      writetoteensy(m_OU_exc);
-      writetoteensy(D_OU_exc);
-      writetoteensy(m_OU_inh);
-      writetoteensy(D_OU_inh);
-      writetoteensy(float(g_epsc_textfield.getText()));
-      println(" response from Teensy:");
-      if (confirmed()) {         // conductance values shown in GUI and interpreted by Teensy are identical
-        dcControl.getController("upload").setColorForeground(color(0,255,0));
-      } else {                   // conductance values differ: rounding artifacts or transmission errors
-        dcControl.getController("upload").setColorForeground(color(255,0,0));
-      }
+void upload() {
+  if (! isConnected()) {
+    return;
+  }
+
+  print("Updating ...");
+  writeToMcu(g_shunt);
+  writeToMcu(g_hcn);
+  writeToMcu(g_Na);
+  writeToMcu(m_OU_exc);
+  writeToMcu(D_OU_exc);
+  writeToMcu(m_OU_inh);
+  writeToMcu(D_OU_inh);
+  writeToMcu(Float.parseFloat(g_epsc_textfield.getText()));
+
+  println(" response from MCU:");
+  if (confirmed()) {         // conductance values shown in GUI and interpreted by Teensy are identical
+    cp5.getController("upload").setColorForeground(okColor);
+  } else {                   // conductance values differ: rounding artifacts or transmission errors
+    cp5.getController("upload").setColorForeground(failColor);
+  }
 }
 
 
 
 // Zero all the numbers in the GUI and transmit zeros to the microcontroller.
-void zero(){
-    dcControl.getController("g_shunt").setValue(0.0);
-    dcControl.getController("g_hcn").setValue(0.0);
-    dcControl.getController("g_Na").setValue(0.0);
-    dcControl.getController("m_OU_exc").setValue(0.0);
-    dcControl.getController("D_OU_exc").setValue(0.0);
-    dcControl.getController("m_OU_inh").setValue(0.0);
-    dcControl.getController("D_OU_inh").setValue(0.0);
-    g_epsc_textfield.setText(" 0.00");
-    upload();
+void zero() {
+  if (! isConnected()) {
+    return;
+  }
+
+  cp5.getController("g_shunt").setValue(0.0);
+  cp5.getController("g_hcn").setValue(0.0);
+  cp5.getController("g_Na").setValue(0.0);
+  cp5.getController("m_OU_exc").setValue(0.0);
+  cp5.getController("D_OU_exc").setValue(0.0);
+  cp5.getController("m_OU_inh").setValue(0.0);
+  cp5.getController("D_OU_inh").setValue(0.0);
+  g_epsc_textfield.setText(" 0.00");
+
+  upload();
 }
 
 
 // Compares all numbers from the GUI with the echo from the microcontroller and
 // highlights individual values depending on the success of the transmission.
 // In addition, the Upload button is colored depending on the update success.
-boolean confirmed(){
+boolean confirmed() {
   boolean valid = true;
-  delay(500);                // estimated maximum delay for USB buffer transmission from Teensy to GUI
-  readfromteensy();          // receive values at once, but convert individually to avoid problems with GUI delay
-  if (float(echo[0]) != g_shunt) {
-    dcControl.getController("g_shunt").setValue(float(echo[0]));
-    dcControl.getController("g_shunt").setColorValueLabel(color(255,0,0));
+
+  // estimated maximum delay for USB buffer transmission from Teensy to GUI
+  delay(500);
+
+  // receive values at once, but convert individually to avoid problems with GUI delay
+  readFromMcu();
+
+  if (Float.parseFloat(echo[0]) != g_shunt) {
+    cp5.getController("g_shunt").setValue(Float.parseFloat(echo[0]));
+    cp5.getController("g_shunt").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("g_shunt").setColorValueLabel(color(0,255,0));
+    cp5.getController("g_shunt").setColorValueLabel(okColor);
   }
-  if (float(echo[1]) != g_hcn) {
-    dcControl.getController("g_hcn").setValue(float(echo[1]));
-    dcControl.getController("g_hcn").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[1]) != g_hcn) {
+    cp5.getController("g_hcn").setValue(Float.parseFloat(echo[1]));
+    cp5.getController("g_hcn").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("g_hcn").setColorValueLabel(color(0,255,0));
+    cp5.getController("g_hcn").setColorValueLabel(okColor);
   }
-  if (float(echo[2]) != g_Na) {
-    dcControl.getController("g_Na").setValue(float(echo[2]));
-    dcControl.getController("g_Na").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[2]) != g_Na) {
+    cp5.getController("g_Na").setValue(Float.parseFloat(echo[2]));
+    cp5.getController("g_Na").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("g_Na").setColorValueLabel(color(0,255,0));
+    cp5.getController("g_Na").setColorValueLabel(okColor);
   }
-  if (float(echo[3]) != m_OU_exc) {
-    dcControl.getController("m_OU_exc").setValue(float(echo[3]));
-    dcControl.getController("m_OU_exc").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[3]) != m_OU_exc) {
+    cp5.getController("m_OU_exc").setValue(Float.parseFloat(echo[3]));
+    cp5.getController("m_OU_exc").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("m_OU_exc").setColorValueLabel(color(0,255,0));
+    cp5.getController("m_OU_exc").setColorValueLabel(okColor);
   }
-  if (float(echo[4]) != D_OU_exc) {
-    dcControl.getController("D_OU_exc").setValue(float(echo[4]));
-    dcControl.getController("D_OU_exc").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[4]) != D_OU_exc) {
+    cp5.getController("D_OU_exc").setValue(Float.parseFloat(echo[4]));
+    cp5.getController("D_OU_exc").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("D_OU_exc").setColorValueLabel(color(0,255,0));
+    cp5.getController("D_OU_exc").setColorValueLabel(okColor);
   }
-  if (float(echo[5]) != m_OU_inh) {
-    dcControl.getController("m_OU_inh").setValue(float(echo[5]));
-    dcControl.getController("m_OU_inh").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[5]) != m_OU_inh) {
+    cp5.getController("m_OU_inh").setValue(Float.parseFloat(echo[5]));
+    cp5.getController("m_OU_inh").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("m_OU_inh").setColorValueLabel(color(0,255,0));
+    cp5.getController("m_OU_inh").setColorValueLabel(okColor);
   }
-  if (float(echo[6]) != D_OU_inh) {
-    dcControl.getController("D_OU_inh").setValue(float(echo[6]));
-    dcControl.getController("D_OU_inh").setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[6]) != D_OU_inh) {
+    cp5.getController("D_OU_inh").setValue(Float.parseFloat(echo[6]));
+    cp5.getController("D_OU_inh").setColorValueLabel(failColor);
     valid = false;
   } else {
-    dcControl.getController("D_OU_inh").setColorValueLabel(color(0,255,0));
+    cp5.getController("D_OU_inh").setColorValueLabel(okColor);
   }
-   if (float(echo[7]) != float(g_epsc_textfield.getText())) {
-     g_epsc_textfield.setValue(echo[7]);
-     g_epsc_textfield.setColorValueLabel(color(255,0,0));
+
+  if (Float.parseFloat(echo[7]) != Float.parseFloat(g_epsc_textfield.getText())) {
+    g_epsc_textfield.setValue(echo[7]);
+    g_epsc_textfield.setColorValueLabel(failColor);
     valid = false;
   } else {
-    g_epsc_textfield.setColorValueLabel(color(0,255,0));
+    g_epsc_textfield.setColorValueLabel(okColor);
   }
+
   return valid;
 }
 
 
 // The numbers sent to the Teensy as unsigned bytes are echoed
 // by the device as strings followed by a newline character
-void readfromteensy() {
-  while (myPort.available() > 0) {
-    String inBuffer = myPort.readString();
+void readFromMcu() {
+  if (! isConnected()) {
+    return;
+  }
+
+  while (mcuPort.available() > 0) {
+    println("reading...");
+    String inBuffer = mcuPort.readString();
     if (inBuffer != null) {
       echo = split(inBuffer, "\n");
       for (String myString : echo) {  // iterate through values
         print(myString + " ");
       };
       println();
+    } else {
+      println("nothing?");
     }
   }
 }
@@ -197,23 +319,24 @@ void readfromteensy() {
 
 // The numbers from the GUI (floats) are converted to unsigned bytes
 // and written to the Teensy.
-void writetoteensy(float foo) {
-    byte[] b;
-    ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-    byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-    b = byteBuffer.putFloat(foo).array();
-    for (int y=0; y<4; y++) {    // This is probably not necessary
-      int boo = (b[y]&0xFF);     // since negative bytes get converted
-      myPort.write(boo);         // when written
-    }
+void writeToMcu(float value) {
+  if (! isConnected()) {
+    return;
+  }
+
+  mcuPort.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(value).array());
 }
 
 
 // dispose() is invoked when the applet window closes.
 // It just cleans everything up.
 void dispose() {
-    print("Stopping ...");
-    myPort.clear();
-    myPort.stop();
-    println(" done.");
-}  
+  if (! isConnected()) {
+    return;
+  }
+
+  print("Stopping ...");
+  mcuPort.stop();
+  mcuPort = null;
+  println("Done.");
+}
