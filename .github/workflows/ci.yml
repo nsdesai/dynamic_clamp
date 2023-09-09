@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  arduino:
+    name: Arduino Compile
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        board:
+          - adafruit:samd:adafruit_itsybitsy_m4
+          - teensy:avr:teensy36
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pull Image
+        run: docker pull leocov/arduino-processing:latest
+
+      - name: Arduino Compile ${{ matrix.board }}
+        run: |
+          docker run --rm \
+            -v "$(pwd)/dynamic_clamp:/build/dynamic_clamp" \
+            -w /build \
+            leocov/arduino-processing:latest \
+            arduino-cli compile \
+              --clean \
+              --verbose \
+              --fqbn ${{ matrix.board }} \
+              dynamic_clamp
+
+  processing:
+    name: Processing Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pull Image
+        run: docker pull leocov/arduino-processing:latest
+
+      - run: |
+          docker run --rm \
+            -v "$(pwd)/processing_control:/build/processing_control" \
+            -w /build \
+            leocov/arduino-processing:latest \
+            processing-java --sketch=/build/processing_control --output=/build/dist --build
