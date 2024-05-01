@@ -17,14 +17,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Pull Image
-        run: docker pull leocov/arduino-processing:latest
+        run: docker pull ghcr.io/leocov-dev/arduino-processing-image:0.0.6
 
       - name: Arduino Compile ${{ matrix.board }}
         run: |
           docker run --rm \
             -v "$(pwd)/dynamic_clamp:/build/dynamic_clamp" \
             -w /build \
-            leocov/arduino-processing:latest \
+            ghcr.io/leocov-dev/arduino-processing-image:0.0.6 \
             arduino-cli compile \
               --clean \
               --verbose \
@@ -39,11 +39,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Pull Image
-        run: docker pull leocov/arduino-processing:latest
+        run: docker pull ghcr.io/leocov-dev/arduino-processing-image:0.0.6
 
       - run: |
           docker run --rm \
             -v "$(pwd)/processing_control:/build/processing_control" \
             -w /build \
-            leocov/arduino-processing:latest \
+            ghcr.io/leocov-dev/arduino-processing-image:0.0.6 \
             processing-java --sketch=/build/processing_control --output=/build/dist --build

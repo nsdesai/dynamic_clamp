@@ -1,0 +1,9 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "ad8032")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/ad8032.kicad_sym")(options "")(descr ""))
+  (lib (name "tmv0512d")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/tmv0512d.kicad_sym")(options "")(descr ""))
+  (lib (name "adafruit_itsybitsy_m4")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/adafruit_itsybitsy_m4.kicad_sym")(options "")(descr ""))
+  (lib (name "bnc-tht")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/bnc-tht.kicad_sym")(options "")(descr ""))
+  (lib (name "molex-0731711640")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/molex-0731711640.kicad_sym")(options "")(descr ""))
+  (lib (name "CONBNC002")(type "KiCad")(uri "${KIPRJMOD}/lib_sch/CONBNC002.kicad_sym")(options "")(descr ""))
+)
