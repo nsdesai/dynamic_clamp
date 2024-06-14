@@ -578,7 +578,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "pdf/",
+      "plot": "gerber/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "../enclosure/schematic-1.2.step",
