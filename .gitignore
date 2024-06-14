@@ -4,3 +4,7 @@ dist/
 
 .DS_Store
 *.autosave
+
+# calibration logs
+I_*.txt
+Vm_*.txt
