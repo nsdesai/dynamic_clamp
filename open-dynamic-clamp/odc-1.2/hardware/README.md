@@ -63,11 +63,12 @@ A validation and calibration process is described in the [Setup Manual](../../..
   - Power the ItsyBitsy with a USB cable and connect the `USB`, `3V` and `G` pins to the PCB headers with extension jumpers such that all other pins remain disconnected.
   - Power the ItsyBitsy with a USB cable and socket it into the PCB headers but double-click the reset button to put it into programming mode (this prevents any output voltage on the DAC pin due to any currently loaded firmware). You will see the red LED next to the reset button pulse slowly.
 - Calibration to derive the slope and intercept values in table 13 (page 31) required by the firmware may be done by any of the described methods (Direct page 20, Model Cell + Processing page 23, Model Cell + Arduino page 29)
-  - If you have hardware conforming to the 1.2.1 design then these precalculated values should work
-    - input slope: `0.0498`
-    - input intercept: `-100.875`
-    - output slope: `-1.561`
+  - If you have hardware conforming to the 1.2.1 design with the trim potentiometers set to produce +/- 3.3V, then these precalculated values should work
+    - input slope: `4.9756`
+    - input intercept: `-10087.453`
+    - output slope: `-624.3895`
     - output intercept: `2108.4`
+  - See [example calculations spreadsheet](https://docs.google.com/spreadsheets/d/1fMq_oq5LJLbKDHQDHSRb5kDalZ01myzjR7bMcWg4iwA) for details on deriving calibration values
 
 # Firmware Notes
 
