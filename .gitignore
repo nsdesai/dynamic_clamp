@@ -1,4 +1,10 @@
+# jetbrains IDE
 .idea/
+
+# eclipse-theia IDE
+.theia/
+# theia temp build dir
+dynamic_clamp/build
 
 dist/
 
