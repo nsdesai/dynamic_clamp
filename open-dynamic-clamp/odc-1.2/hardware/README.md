@@ -1,7 +1,7 @@
 # Open Dynamic Clamp 1.2 Hardware
 
 This documentation describes circuit schematics for the ODC 1.2 hardware iteration.
-This design is based on the work of Aditya Asopa's updated schematic.
+This design is based on the work of [Aditya Asopa's updated schematic](../../../Setup%20and%20Calibration%20Manual%20for%20ver2.0/Setup%20Manual.pdf).
 
 This hardware design is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
@@ -34,7 +34,7 @@ The design may be built successfully on a breadboard or ordered as a PCB.
 
 # PCB Assembly Notes
 
-An [interactive BOM](odc-1.2/bom/ibom.html) is available to help with assembly.
+An [interactive BOM](odc-1.2/bom/ibom.html) is available to help with assembly (open the html file in any browser).
 
 - Take careful note of capacitor polarity. 
   - Capacitor C7 is on a negative rail.
@@ -72,11 +72,20 @@ A validation and calibration process is described in the [Setup Manual](../../..
 
 # Firmware Notes
 
-This hardware revision is 100% compatible with the [dynamic_clamp](../../../dynamic_clamp) Arduino firmware.
+This hardware revision (ODC 1.2) is 100% compatible with the original
+[dynamic_clamp](../../../dynamic_clamp) Arduino firmware.
 
 Adafruit provides an extensive Arduino setup guide which is a prerequisite for loading the firmware.
 1. [Setup the Arduino IDE](https://learn.adafruit.com/introducing-adafruit-itsybitsy-m4/setup)
 2. [Install Adafruit board support](https://learn.adafruit.com/introducing-adafruit-itsybitsy-m4/using-with-arduino-ide)
+
+> [!IMPORTANT]
+> 
+> If you are having problems uploading firmware in the Arduino IDE you may need
+> to put the device into "Boot Mode" by quickly double-clicking the reset button.
+> This is useful if you can't see the device serial port in the Arduino IDE
+> board selection window. This should allow you to upload new firmware in cases 
+> were bad firmware is crashing the microcontroller.
 
 Additional useful information on the ItsyBitsy M4 board:
 - [General board overview](https://learn.adafruit.com/introducing-adafruit-itsybitsy-m4/overview)
