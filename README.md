@@ -17,7 +17,7 @@ The original project was built on a breadboard and used Arduino/Processing softw
 
 (4) Kyle Wedgwood has written a Matlab controller that would replace the Processing sketch included here. It allows more flexibility in specifying which conductances to control, and is available through his Github account https://github.com/kyle-wedgwood/DynamicClampController.
 
-Please direct any questions or comments about this Github site or the dynamic clamp project generally to Niraj S. Desai at niraj.desai3@nih.gov.
+Please direct any questions or comments about this Github site or the dynamic clamp project generally to Niraj S. Desai at niraj.s.desai@gmail.com.
  
 
 
