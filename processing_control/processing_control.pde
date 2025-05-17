@@ -30,7 +30,7 @@ import java.nio.*;
 // a serial object (the port to communicate with the microcontroller)
 // change port if needed in the UI
 String DEFAULT_SERIAL_PORT = System.getProperty("os.name").startsWith("Windows")
-  ? " COM6"                    // usual windows default
+  ? " COM3"                    // usual windows default
   : " /dev/cu.usbmodem101";    // usual posix default
 Serial mcuPort;
 
