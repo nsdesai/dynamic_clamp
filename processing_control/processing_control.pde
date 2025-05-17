@@ -30,7 +30,7 @@ import java.nio.*;
 // a serial object (the port to communicate with the microcontroller)
 // change port if needed in the UI
 String DEFAULT_SERIAL_PORT = System.getProperty("os.name").startsWith("Windows")
-  ? " COM3"                    // usual windows default
+  ? " COM6"                    // usual windows default
   : " /dev/cu.usbmodem101";    // usual posix default
 Serial mcuPort;
 
@@ -83,7 +83,7 @@ void setup() {
   connectTextfield = cp5.addTextfield("Serial Port", offsetX, offsetY, 200, 30)
     .setText(DEFAULT_SERIAL_PORT)
     .setColorBackground(inputColor);
-  connectButton = cp5.addButton("Connect");
+  connectButton = cp5.addButton("connect");
   connectButton.setPosition(offsetX + 220, offsetY)
     .setSize(80, 30)
     .setColorBackground(buttonColor)
@@ -117,19 +117,20 @@ void setup() {
 
   offsetY+=75;
 
-  uploadButton = cp5.addButton("Upload");
+  uploadButton = cp5.addButton("upload");
   uploadButton.setPosition(offsetX+25, offsetY)
     .setSize(80, 50)
     .setColorBackground(disabledColor)
     .setColorForeground(textColor)
     .setLock(true);
 
-  zeroButton = cp5.addButton("Zero");
+  zeroButton = cp5.addButton("zero");
   zeroButton.setPosition(offsetX+150, offsetY)
     .setSize(80, 50)
     .setColorBackground(disabledColor)
     .setColorForeground(textColor)
     .setLock(true);
+    
 }
 
 
